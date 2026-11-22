@@ -19,9 +19,9 @@ function build(T) {
   const WORK = [-4.5, -0.7];
   const TARGET = [3.3, -0.1];
   const SHEET = [2.7, 0.5];
-  const CLOCK = [-2.3, 1.7];
-  const TEST = [0.6, 2.7];
-  const FAIL = [-0.85, 1.7];
+  const CLOCK = [-2.6, 1.7];
+  const TEST = [0.0, 2.85];
+  const FAIL = [-1.25, 1.5];
   const [ROOM_W, ROOM_H] = [18.0, 10.2];
   const [PITCH_X, PITCH_Y] = [21.0, 12.4];
   const NEAR = 0.72;                       // the picture's scale when it shows the whole of Pip's room, and no other
@@ -175,8 +175,8 @@ function build(T) {
   kit.flash(last, tTime + 1.0, 0.8, 0.3);
   kit.flash(last, tFail, 0.9, 0.3);
   parts.light(test, 'fail', tFail);
-  const failed = parts.cross('failed', st.front, FAIL, 1.3);
-  kit.pop(failed, tFail, 1.3, 0.3);
+  const failed = parts.cross('failed', st.front, FAIL, 1.2);
+  kit.pop(failed, tFail, 1.2, 0.3);
   cues.push({ t: tFail, type: 'tick', pitch: 0.45, gain: 1.4 });
   parts.mood(pip, tFail + 0.2, 'sad');
   parts.live(pip, 3);

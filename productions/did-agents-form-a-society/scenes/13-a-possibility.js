@@ -120,7 +120,7 @@ function build(T) {
 
   const not = kit.ring('not', st.front, [SLOT[0], SLOT[1] + 0.8], 1.3, kit.CORAL, 0.07);
   [[need, tNeed], [line, tAncestors], [feel, tFeel]].forEach(([made, t], k) => {
-    kit.pop(made, t, 1.0, 0.4, GONE[k], 0.35);
+    kit.pop(made, t, 1.15, 0.4, GONE[k], 0.35);
     kit.flash(not, GONE[k], 0.6, 0.3);
     cues.push({ t, type: 'pop', pitch: 0.8 + 0.1 * k }, { t: GONE[k], type: 'whoosh', pitch: 0.8, gain: 0.5 });
   });
@@ -152,9 +152,9 @@ function build(T) {
 
   // ------------------------------------------------------------ wherever intelligent beings can talk: living things, or programs
   key(row, 'loc', fr(tIf), [0, 0, row.z]);
-  key(row, 'loc', fr(tIf + 1.0), [0, 2.6, row.z]);
+  key(row, 'loc', fr(tIf + 1.0), [0, 2.75, row.z]);
   key(row, 'scale', fr(tIf), 1.0);
-  key(row, 'scale', fr(tIf + 1.0), 0.62);
+  key(row, 'scale', fr(tIf + 1.0), 0.72);
   cues.push({ t: tIf, type: 'whoosh', gain: 0.6 });
 
   const members = [];
@@ -189,7 +189,7 @@ function build(T) {
   PAIRS.forEach((pair, k) => cues.push({ t: tBeings + 0.9 + 0.15 * k, type: 'tick', pitch: 1.0 + 0.08 * k, gain: 0.6 }));
 
   [[PEOPLE, tLiving, -1], [AGENTS, tPrograms, 1]].forEach(([at, t, side], k) => {
-    const tie = kit.branch(`appear${k}`, st.props, [side * 1.3, 1.45], [at[0] - side * 0.9, at[1] + 1.85], kit.AMBER, 0.08, 0.9);
+    const tie = kit.branch(`appear${k}`, st.props, [side * 1.4, 1.4], [at[0] - side * 0.9, at[1] + 1.85], kit.AMBER, 0.08, 0.9);
     kit.grow(tie, t, 0.4);
     const either = kit.ring(`either${k}`, st.front, at, 2.5, kit.PAPER, 0.07);
     kit.flash(either, t + 0.3, 1.0, 0.15);

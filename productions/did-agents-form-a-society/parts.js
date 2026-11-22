@@ -432,13 +432,14 @@ const parts = (() => {
     return { root, wedges, share };
   }
 
-  /* Run a clock down to the share to, from t0 to t1. Call one clock's runs in the order they happen. */
+  /* Run a clock down to the share to, from t0 to t1: the last wedge of the run goes out at t1. Call
+     one clock's runs in the order they happen. */
   function drain(made, t0, t1, to) {
     const from = made.share;
     made.wedges.forEach((wedge, i) => {
       const used = (i + 0.5) / WEDGES;
       if (used <= 1 - from || used > 1 - to) return;
-      const f = fr(t0 + (t1 - t0) * (used - (1 - from)) / (from - to));
+      const f = fr(t0 + (t1 - t0) * ((i + 1) / WEDGES - (1 - from)) / (from - to));
       alpha(wedge, f, 1.0);
       alpha(wedge, f + 3, 0.0);
     });
@@ -551,9 +552,10 @@ const parts = (() => {
     { coat: '#c28a3f', coatDeep: '#8f6229', hair: '#d8d2c4' }, { coat: '#7357e0', coatDeep: '#4d38a8', hair: '#3b2a26' },
   ];
 
-  /* A person of the kit, standing with their feet at loc, in the coat and hair that which picks. */
-  function human(name, parent, loc, scale = 0.4, which = 0, facing = 1) {
-    return kit.person(name, parent, [loc[0], loc[1] + 4.3 * scale], scale, { facing, ...LOOKS[which % LOOKS.length] });
+  /* A person of the kit, standing with their feet at loc, in the coat and hair that which picks.
+     pen puts a pen in the hand of the arm that works. */
+  function human(name, parent, loc, scale = 0.4, which = 0, facing = 1, pen = false) {
+    return kit.person(name, parent, [loc[0], loc[1] + 4.3 * scale], scale, { facing, pen, ...LOOKS[which % LOOKS.length] });
   }
 
   // ---------------------------------------------------------------- computers
@@ -800,7 +802,7 @@ const parts = (() => {
     const discs = [0, 1, 2].map((k) => {
       const disc = group(`${name}-disc${k}`, root, [(k - 1) * 0.62, 0]);
       const on = lit.includes(k);
-      if (on) shape(`${name}-glow${k}`, circlePts(0.55), glowMaterial(AMBER, 0.6), disc);
+      if (on) shape(`${name}-glow${k}`, circlePts(0.4), glowMaterial(AMBER, 0.55), disc);
       shape(`${name}-rim${k}`, circlePts(0.23, null, null, 24), material(on ? AMBER_DEEP : SLATE), disc);
       shape(`${name}-face${k}`, circlePts(0.17, null, null, 24), on ? material('#fff2c4', AMBER) : material(INK700), disc);
       return disc;
@@ -815,10 +817,10 @@ const parts = (() => {
     const root = empty('heading', st.raw.front, [0, 0, nextZ(st.raw.front)]);
     pin(root, path, [-6.3, 3.7], st.raw.front);
     const inner = group('heading-in', root, [0, 0]);
-    const wide = 2.5 + 0.27 * label.length;
+    const wide = 2.6 + 0.27 * label.length;
     shape('heading-plate', rrectPts(wide, 0.92, 0.46).map(([x, y]) => [x + wide / 2 - 1.1, y]), material(INK900, null, 0.72), inner);
     three('heading-count', inner, [0, 0], [which]);
-    text('heading-name', label, 0.5, material(PAPER), inner, [1.2, -0.02], { align: 'LEFT' });
+    text('heading-name', label, 0.5, material(PAPER), inner, [1.3, -0.02], { align: 'LEFT' });
     kit.pop(inner, t, 1.0, 0.4);
     return root;
   }

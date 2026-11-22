@@ -24,7 +24,7 @@ function build(T) {
 
   const cues = [];
   const end = sec(kit.frames());
-  const tCross = T.at(0, 0.13);
+  const tCross = T.at(0, 0.11);
   const tOnly = T.at(0, 0.22);
   const tLooked = T.at(0, 0.49);
   const tSo = T.at(0, 0.74);
@@ -37,7 +37,7 @@ function build(T) {
   const falls = [];
   [[-2.5, -1.5, 1], [-1.2, -1.85, 4], [0.1, -1.5, 2]].forEach(([x, y, which], k) => {
     const made = parts.mini(`believer${k}`, st.cast, [x, y], 0.7, which);
-    parts.bob(made.root, 0, tOnly - 0.4, k * 1.3, 0.04);
+    parts.bob(made.root, 0, tOnly - 0.3, k * 1.3, 0.04);
     falls.push(made.root);
   });
   const belief = parts.thought('belief', st.front, BELIEF, 4.8, 2.3, [0, -1]);
@@ -49,28 +49,28 @@ function build(T) {
   kit.pop(wrong, tCross, 4.0, 0.3);
   cues.push({ t: tCross, type: 'tick', pitch: 0.4, gain: 1.6 }, { t: tCross + 0.05, type: 'whoosh', pitch: 0.6 });
   falls.push(belief.root, wrong);
-  falls.forEach((made, k) => parts.vanish(made, tOnly - 0.4 + 0.03 * k, 0.3));
+  falls.forEach((made, k) => parts.vanish(made, tOnly - 0.3 + 0.03 * k, 0.3));
 
   // ------------------------------------------------------------ the test only checked whether the word was right
   const scorer = parts.scorer('scorer', st.props, SCORER, 1.4);
-  kit.pop(scorer.root, tOnly - 0.2, 1.4, 0.5);
-  cues.push({ t: tOnly - 0.2, type: 'pop', pitch: 0.6 }, { t: tOnly - 0.1, type: 'chime', gain: 0.5, pitch: 0.7, dur: 1.8 });
+  kit.pop(scorer.root, tOnly - 0.4, 1.4, 0.5);
+  cues.push({ t: tOnly - 0.4, type: 'pop', pitch: 0.6 }, { t: tOnly - 0.3, type: 'chime', gain: 0.5, pitch: 0.7, dur: 1.8 });
   const pin = kit.branch('pin', st.props, [REF[0], SCORER[1] + 1.6], [REF[0], REF[1] - 0.4], kit.MIST, 0.07, 0.8);
-  kit.grow(pin, tOnly, 0.3);
+  kit.grow(pin, tOnly - 0.1, 0.3);
   const right = parts.word('right', st.props, REF, 0.85);
-  kit.pop(right.root, tOnly + 0.1, 0.85, 0.4);
-  cues.push({ t: tOnly + 0.1, type: 'pop', pitch: 1.1 });
+  kit.pop(right.root, tOnly, 0.85, 0.4);
+  cues.push({ t: tOnly, type: 'pop', pitch: 1.1 });
 
   /* A word sent up beside the right one, the lamp it lights, and the mark it gets. */
   const judged = (name, card, from, t, pass, stay = false) => {
-    parts.send(card, [from, [(from[0] + TRY[0]) / 2, TRY[1] + 0.6], TRY], t, t + 0.6, { size: 0.85, stay: true });
+    parts.send(card, [from, [(from[0] + TRY[0]) / 2, TRY[1] + 0.6], TRY], t, t + 0.5, { size: 0.85, stay: true });
     const same = kit.ring(`${name}-same`, st.front, [(TRY[0] + REF[0]) / 2, TRY[1]], 1.25, pass ? kit.MINT : kit.CORAL, 0.08);
-    kit.flash(same, t + 0.65, 0.6, 0.3);
-    parts.light(scorer, pass ? 'pass' : 'fail', t + 0.7, stay ? null : t + 1.3);
+    kit.flash(same, t + 0.52, 0.5, 0.3);
+    parts.light(scorer, pass ? 'pass' : 'fail', t + 0.55, stay ? null : t + 1.1);
     const mark = pass ? parts.check(`${name}-mark`, st.front, MARK, 1.3) : parts.cross(`${name}-mark`, st.front, MARK, 1.3);
-    kit.pop(mark, t + 0.75, 1.3, 0.3, stay ? null : t + 1.3, 0.2);
-    if (!stay) parts.vanish(card, t + 1.3, 0.2);
-    cues.push({ t, type: 'whoosh', gain: 0.5 }, { t: t + 0.7, type: pass ? 'chime' : 'tick', pitch: pass ? 1.0 : 0.45, gain: pass ? 0.5 : 1.4, dur: 1.2 });
+    kit.pop(mark, t + 0.6, 1.3, 0.3, stay ? null : t + 1.1, 0.2);
+    if (!stay) parts.vanish(card, t + 1.1, 0.2);
+    cues.push({ t, type: 'whoosh', gain: 0.5 }, { t: t + 0.55, type: pass ? 'chime' : 'tick', pitch: pass ? 1.0 : 0.45, gain: pass ? 0.5 : 1.4, dur: 1.2 });
   };
   const card = (name, marks) => {
     const root = parts.group(name, st.front, [0, 0], 0.001);
@@ -81,8 +81,8 @@ function build(T) {
   };
   const stars = () => kit.starPts(0.11, 0.045, 5);
   const rounds = (i) => (i % 2 ? kit.rrectPts(0.16, 0.16, 0.02) : kit.circlePts(0.09, null, null, 14));
-  judged('first', card('first', stars), [-9.5, 1.0], tOnly + 0.5, true);
-  judged('second', card('second', rounds), [-9.5, -0.6], tOnly + 1.9, false);
+  judged('first', card('first', stars), [-9.5, 1.0], tOnly + 0.3, true);
+  judged('second', card('second', rounds), [-9.5, -0.6], tOnly + 1.5, false);
 
   // ------------------------------------------------------------ it never looked at how an agent had got it
   for (let k = 0; k < 6; k++) {

@@ -23,7 +23,7 @@ function build(T) {
   const HATCH = [HF[0] - 2.25, HF[1] - 1.68];
   const W = [-2.6, -1.6];                                // the agent that writes
   const D = [-1.0, 1.3];                                 // the agent that stays out
-  const NOTE = [W[0] - 0.4, W[1] + 2.2];
+  const NOTE = [W[0] - 1.0, W[1] + 2.2];
   const WHY = [W[0] - 1.6, W[1] + 2.2];
   const STOOD = [
     [-6.3, 2.0], [-6.3, 0.5], [-6.3, -1.0], [-6.3, -2.5], [-6.3, -4.0], [-5.0, 2.0], [-5.0, 0.5], [-5.0, -1.0], [-5.0, -2.5], [-5.0, -4.0],
@@ -49,7 +49,7 @@ function build(T) {
   kit.motes(22, 13);
   const st = parts.stage();
   const path = parts.ramp([
-    [0, [0, 0.2, 19.5]], [tSent - 0.3, [0, 0.2, 19.8]], [tSent + 1.0, [0.6, -0.4, 22.5]], [tBut + 0.6, [0.6, -0.4, 22]],
+    [0, [0, 0.2, 19.5]], [tSent - 0.3, [0, 0.2, 19.8]], [tSent + 1.0, [0.2, -0.4, 22.5]], [tBut + 0.6, [0.2, -0.4, 22]],
     [tWrote + 0.8, [-1.5, -0.5, 17.5]], [tGo, [-1.3, -0.5, 17.2]], [end, [-0.6, -0.6, 17.6]],
   ]);
   parts.heading(st, path, 1, 'peer influence', tName);

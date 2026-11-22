@@ -32,7 +32,7 @@ function build(T) {
 
   // ------------------------------------------------------------ an agent learns to write from a huge amount of human writing
   [-7.0, -5.7, -4.4].forEach((x, k) => {
-    const writer = parts.human(`writer${k}`, st.cast, [x, -2.6 + 0.5 * (k % 2)], 0.36, k + 1, 1);
+    const writer = parts.human(`writer${k}`, st.cast, [x, -2.6 + 0.5 * (k % 2)], 0.36, k + 1, 1, true);
     kit.pop(writer.root, tLearn - 0.6 + 0.12 * k, 0.36, 0.4);
     kit.key(writer.arm, 'rot', 1, 0.9);
     for (const f of kit.every(5)) kit.key(writer.arm, 'rot', f, 0.9 + 0.14 * Math.sin(sec(f) * 6 + k));

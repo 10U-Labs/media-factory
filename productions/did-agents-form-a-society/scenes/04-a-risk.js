@@ -18,11 +18,11 @@ function build(T) {
   const CLOCK = [PLACE[0] - 1.55, PLACE[1] + 1.2];
   const YES = [PLACE[0] + 0.05, PLACE[1] + 1.55];
   const OFFER = [PLACE[0] + 1.3, PLACE[1] + 0.35];
-  const RISK = [0, 6.1];
+  const RISK = [0, 5.9];
   const IDEAS = [[1.2, 2.5], [1.2, 1.2], [-1.6, -1.6]];
 
   const GROUP = [PLACE[0] + 0.7, PLACE[1] + 1.0, 15];
-  const BOARD = [0.6, 1.5, 27];
+  const BOARD = [0.6, 1.3, 27.5];
 
   const cues = [];
   const end = sec(kit.frames());
@@ -111,7 +111,7 @@ function build(T) {
 
   // ------------------------------------------------------------ camera
   kit.camera(parts.ramp([
-    [0, GROUP], [tIdeas - 0.3, [GROUP[0], GROUP[1], 14.4]], [tIdeas + 1.2, BOARD], [tAsked - 0.2, [0.7, 1.4, 26.4]], [tAsked + 1.2, GROUP],
+    [0, GROUP], [tIdeas - 0.3, [GROUP[0], GROUP[1], 14.4]], [tIdeas + 1.2, BOARD], [tAsked - 0.2, [0.7, 1.2, 27]], [tAsked + 1.2, GROUP],
     [tYes, [GROUP[0], GROUP[1] - 0.1, 13.6]], [end, [GROUP[0] - 0.1, GROUP[1] - 0.2, 12.8]],
   ]), 1.0);
   return cues;

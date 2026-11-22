@@ -14,8 +14,8 @@ function build(T) {
   const { fr, sec, key } = kit;
   parts.begin();
 
-  const IDEAS = [[1.2, 2.5], [1.2, 0.2], [-1.2, 1.4]];
-  const STEPS = [[4.0, 1.4], [4.0, -0.9], [-4.0, 0.3]];
+  const IDEAS = [[1.2, 2.5], [1.2, 0.2], [-1.2, 0.0]];
+  const STEPS = [[4.0, 1.4], [4.0, -0.9], [-4.0, -1.0]];
   const cues = [];
   const end = sec(kit.frames());
   const tName = T.at(0, 0.2);
@@ -56,7 +56,7 @@ function build(T) {
   const nearest = (to, taken = []) => crowd.filter((made) => !taken.includes(made))
     .reduce((best, made) => (Math.hypot(made.at[0] - to[0], made.at[1] - to[1]) < Math.hypot(best.at[0] - to[0], best.at[1] - to[1]) ? made : best));
   const brave = [];
-  for (const to of [[4.7, 1.6], [4.7, -0.9], [-4.7, 0.3]]) brave.push(nearest(to, brave));
+  for (const to of [[4.7, 1.6], [4.7, -0.9], [-4.7, -0.6]]) brave.push(nearest(to, brave));
   crowd.forEach((made, i) => {
     kit.pop(made.root, tWhen - 0.1 + 0.012 * i, 0.6, 0.3);
     if (!brave.includes(made)) parts.bob(made.root, tWhen + 1.0, end, i * 0.9, 0.04);
@@ -82,7 +82,7 @@ function build(T) {
     parts.send(idea, [from, [STEPS[k][0] - 0.1, STEPS[k][1] + 0.95]], t + 0.6, t + 1.1, { shown: true, size: 0.9, to: 0.7, stay: true });
     cues.push({ t, type: 'whoosh', gain: 0.5 });
 
-    const risk = parts.group(`risk${k}`, st.front, [STEPS[k][0] + 0.85, STEPS[k][1] + 0.95], 0.001);
+    const risk = parts.group(`risk${k}`, st.front, [STEPS[k][0] - 0.1 + 0.95 * Math.sign(STEPS[k][0]), STEPS[k][1] + 0.95], 0.001);
     kit.shape(`risk${k}-down`, kit.barPts(0.74, 0.13), faint, risk, [-0.26, 0.26], { rot: -Math.PI / 4 });
     kit.shape(`risk${k}-up`, kit.barPts(0.74, 0.13), faint, risk, [-0.26, -0.26], { rot: Math.PI / 4 });
     kit.pop(risk, tRisk + 0.2 * k, 1.1, 0.3);
