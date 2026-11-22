@@ -1,12 +1,14 @@
 /* The props of the society film, built from the shared kit.
 
-The film follows Pip, an AI agent, through a test and a break-in. Its scenes
-share: the other agents, drawn as Pip in other colours, full size and small;
-how an agent's face shows what it feels, and how an agent goes dark when it is
-shut down; a folder with a name, which is how the agents write to each other;
-a clock for the time an agent has left; the secret word; locks, keys, and
-files; computers; the program that scores the test; a thought; and a company's
-building.
+The film follows Pip, an AI agent, through a test and a break-in, and then
+asks what the agents' group was. Its scenes share: the other agents, drawn as
+Pip in other colours, full size and small; how an agent's face shows what it
+feels, and how an agent goes dark when its time is up; a folder with a name,
+which is how the agents write to each other; a clock for the time an agent has
+left; the secret word; locks and files; computers; the machine that stands
+for the test; a thought, and an idea; a company's building, and a way into
+it; people, and what they live by; and the heading of a scene on one of the
+film's three behaviours.
 
 Every prop is a group: an empty root with its shapes hung on it. A later
 group in a layer is drawn over an earlier one. Pip and the people of the kit
@@ -79,6 +81,20 @@ const parts = (() => {
     }
   }
 
+  /* Keep a group at one place on the screen while the camera moves. path is the camera's path, at
+     is the place on the screen, in screen units from its middle, and layer is the layer the group
+     hangs on. The group's own place and scale are keyed on every frame, so a scene pops or moves
+     what hangs on the group, not the group. */
+  function pin(made, path, at, layer) {
+    const z = layer.z;
+    for (const f of every(1)) {
+      const [cx, cy, cz] = path(sec(f));
+      const s = (cz - z) / (kit.H0 - z);
+      key(made, 'loc', f, [cx * kit.H0 / (kit.H0 - z) + at[0] * s, cy * kit.H0 / (kit.H0 - z) + at[1] * s, made.z]);
+      key(made, 'scale', f, s);
+    }
+  }
+
   // ---------------------------------------------------------------- agents
 
   // An agent's body colours. Pip is the first; the others tell one agent from another.
@@ -104,16 +120,6 @@ const parts = (() => {
     shape(`${name}-screen`, rrectPts(1.28, 0.86, 0.34, 3), material(INK900), root, [0, 0.06]);
     const eyes = [-1, 1].map((side) => shape(`${name}-eye${side}`, circlePts(0.12, null, 0.16, 10), material('#d9fff5'), root, [side * 0.27, 0.14]));
     return { root, shell, bulb, eyes, which, at: [loc[0], loc[1]], scale };
-  }
-
-  /* A small agent stops: its eyes and its bulb go out, and its body dims. */
-  function miniOff(made, t, dur = 0.3) {
-    for (const lit of [...made.eyes, made.bulb]) {
-      alpha(lit, fr(t), 1.0);
-      alpha(lit, fr(t + dur), 0.0);
-    }
-    alpha(made.shell, fr(t), 1.0);
-    alpha(made.shell, fr(t + dur), 0.4);
   }
 
   /* Bob a node up and down about where it stands, from t0 to t1. For a node that does not travel. */
@@ -175,8 +181,8 @@ const parts = (() => {
     blink(p, times);
   }
 
-  /* Shut an agent down at t: its face and its lights go out, its antenna droops, and its arms hang.
-     Let the agent live only until t. */
+  /* An agent's time is up at t: its face and its lights go out, its antenna droops, and its arms
+     hang. Let the agent live only until t. */
   function off(p, t, dur = 0.5) {
     const [f0, f1] = [fr(t), fr(t + dur)];
     for (const lit of [...p.lights, p.halo, p.bulbGlow]) {
@@ -188,15 +194,6 @@ const parts = (() => {
     key(p.rig, 'scale', f1 + 4, [1.02, 0.95, 1]);
     pipArm(p, 'left', t, 4, dur);
     pipArm(p, 'right', t, 4, dur);
-  }
-
-  /* An agent that is shut down from the scene's first frame. Give it no life. */
-  function dark(p) {
-    for (const lit of [...p.lights, p.halo, p.bulbGlow]) alpha(lit, 1, 0.0);
-    key(p.antenna, 'rot', 1, 0.55);
-    key(p.rig, 'loc', 1, [0, -0.07, 0]);
-    key(p.rig, 'scale', 1, [1.02, 0.95, 1]);
-    for (const [side, s] of [['left', -1], ['right', 1]]) key(p.arms[side], 'rot', 1, s * 4 * Math.PI / 180);
   }
 
   // ---------------------------------------------------------------- motion
@@ -408,7 +405,7 @@ const parts = (() => {
     return { board: made, crowd: crowd('agent', st.cast, places, scale, 21), places };
   }
 
-  // ---------------------------------------------------------------- time, the secret word, locks, keys, files
+  // ---------------------------------------------------------------- time, the secret word, locks, files
 
   const WEDGES = 30;
 
@@ -467,19 +464,6 @@ const parts = (() => {
     shape(`${name}-hole`, circlePts(0.07, null, null, 12), material(INK900), root, [0, -0.13]);
     shape(`${name}-slot`, rrectPts(0.06, 0.17, 0), material(INK900), root, [0, -0.24]);
     return { root, shackle };
-  }
-
-  /* A key, lying along the x axis with its teeth to the right. */
-  function doorKey(name, parent, loc, scale = 1.0, rot = 0.0) {
-    const root = group(name, parent, loc, scale, rot);
-    const metal = material('#f1f3ff', MIST);
-    const shapes = [
-      shape(`${name}-ring`, arcPts(0.17, 0.09, 0, 360, 24), metal, root, [-0.33, 0]),
-      shape(`${name}-shaft`, barPts(0.62, 0.09), metal, root, [-0.14, 0]),
-      shape(`${name}-tooth0`, rrectPts(0.08, 0.17, 0), metal, root, [0.3, -0.1]),
-      shape(`${name}-tooth1`, rrectPts(0.08, 0.12, 0), metal, root, [0.43, -0.08]),
-    ];
-    return { root, shapes };
   }
 
   /* A file: a page with a folded corner and lines of writing. options.locked puts a padlock on it. */
@@ -613,9 +597,9 @@ const parts = (() => {
     }
   }
 
-  /* The program that scores the test: a square machine with one eye, a slot that takes a secret
-     word, and two lamps, one for a pass and one for a fail. The lamps are dark at first. halo
-     gives it a glow, which a scorer drawn inside a thought does without. */
+  /* The machine that stands for the test: a square machine with one eye, a slot that takes a
+     secret word, and two lamps, one for a pass and one for a fail. The lamps are dark at first.
+     halo gives it a glow, which one drawn inside a thought does without. */
   function scorer(name, parent, loc, scale = 1.0, halo = true) {
     const root = group(name, parent, loc, scale);
     if (halo) shape(`${name}-halo`, circlePts(2.3), glowMaterial(VIOLET, 0.3, 2.0), root);
@@ -639,7 +623,7 @@ const parts = (() => {
     return { root, eye, lamps, slot: [0, -0.3] };
   }
 
-  /* Light one of the scorer's lamps, 'pass' or 'fail', at t, and put it out at tOut. */
+  /* Light one of the machine's lamps, 'pass' or 'fail', at t, and put it out at tOut. */
   function light(made, kind, t, tOut = null) {
     for (const lit of made.lamps[kind]) appear(lit, t, tOut, 0.15);
   }
@@ -666,7 +650,8 @@ const parts = (() => {
     return { root, w, h };
   }
 
-  /* A small thought of the scorer, for showing that many agents think of it at once. */
+  /* A small thought of the machine that stands for the test, for showing that many agents think
+     of it at once. */
   function notion(name, parent, loc, scale = 1.0) {
     const root = group(name, parent, loc, scale);
     const rim = material(MIST, SLATE);
@@ -693,72 +678,51 @@ const parts = (() => {
     return { root, w, h };
   }
 
-  /* The locked computer that holds an agent's secret word. Its front can fade, to show what is
-     inside: one way in, on the left, and a passage from it that stops short of the closed room
-     the word is kept in. cover lists the shapes of the front, and cap is the wall the passage
-     stops at, hidden at first. entrance, way, and chamber are places, given from the computer's
-     middle for a computer of scale 1. */
+  /* The locked computer that holds an agent's secret word: a case with a padlock on it, a way in
+     on its left side, and a window that shows the word. entrance is where the way in is, from
+     the computer's middle for a computer of scale 1. */
   function target(name, parent, loc, scale = 1.0) {
     const [w, h] = [4.6, 4.0];
     const root = group(name, parent, loc, scale);
     shape(`${name}-shadow`, rrectPts(w + 0.6, h + 0.6, 0.5), glowMaterial(INK900, 0.7, 0.8), root, [0.12, -0.18]);
     shape(`${name}-foot`, rrectPts(w * 0.8, 0.16, 0.07), material(INK600), root, [0, -h / 2 - 0.05]);
     shape(`${name}-case`, rrectPts(w, h, 0.22), material(INK500, INK600), root);
-    shape(`${name}-floor`, rrectPts(w - 0.3, h - 0.3, 0.14), material(INK900), root);
-    const entrance = [-w / 2, -1.0];
-    const way = [entrance, [0.2, -1.0], [0.2, -0.08]];
-    branch(`${name}-way0`, root, way[0], way[1], INK600, 0.36, 1.0);
-    branch(`${name}-way1`, root, [way[1][0], way[1][1] - 0.18], way[2], INK600, 0.36, 1.0);
-    const cap = shape(`${name}-cap`, rrectPts(0.62, 0.14, 0.05), material(CORAL), root, [0.2, 0.06]);
-    alpha(cap, 1, 0.0);
-    const cover = [shape(`${name}-face`, rrectPts(w - 0.3, h - 0.3, 0.14), material(INK700, INK800), root)];
-    for (let i = 0; i < 3; i++) cover.push(shape(`${name}-vent${i}`, barPts(0.9, 0.1), material(INK900), root, [0.9, -1.2 - i * 0.22]));
+    shape(`${name}-face`, rrectPts(w - 0.3, h - 0.3, 0.14), material(INK700, INK800), root);
+    for (let i = 0; i < 3; i++) shape(`${name}-vent${i}`, barPts(0.9, 0.1), material(INK900), root, [0.9, -1.2 - i * 0.22]);
     const chamber = [1.1, 0.9];
     shape(`${name}-chamber`, rrectPts(2.0, 1.3, 0.2), material(INK500, INK600), root, chamber);
     shape(`${name}-glass`, rrectPts(1.78, 1.08, 0.13), material(INK900), root, chamber);
     const secret = word(`${name}-word`, root, chamber, 0.95);
+    const entrance = [-w / 2, -1.0];
     shape(`${name}-port`, circlePts(0.34), material(MINT, MINT_DEEP), root, entrance);
     shape(`${name}-hole`, circlePts(0.22), material(INK900), root, entrance);
     const padlock = lock(`${name}-lock`, root, [-1.1, 0.5], 1.5);
-    return { root, cover, cap, word: secret, lock: padlock, entrance, way, chamber, w, h, scale, at: [loc[0], loc[1]] };
+    return { root, word: secret, lock: padlock, entrance, w, h, scale, at: [loc[0], loc[1]] };
   }
 
-  /* A tool: a small program that does one job. kind picks one of three shapes. */
-  function tool(name, parent, loc, kind = 0, scale = 1.0) {
+  /* A gear, for working a thing out. */
+  function gear(name, parent, loc, scale = 1.0) {
     const root = group(name, parent, loc, scale);
-    if (kind % 3 === 0) {             // a gear
-      shape(`${name}-teeth`, starPts(0.3, 0.2, 8), material(SKY, SKY_DEEP), root);
-      shape(`${name}-wheel`, circlePts(0.22, null, null, 20), material(SKY, SKY_DEEP), root);
-      shape(`${name}-hole`, circlePts(0.09, null, null, 12), material(INK900), root);
-    } else if (kind % 3 === 1) {      // a wrench
-      shape(`${name}-handle`, barPts(0.5, 0.11), material(AMBER, AMBER_DEEP), root, [-0.3, -0.3], { rot: Math.PI / 4 });
-      shape(`${name}-jaw`, arcPts(0.14, 0.1, 80, 370), material(AMBER, AMBER_DEEP), root, [0.14, 0.14]);
-    } else {                          // a magnifying glass
-      shape(`${name}-handle`, barPts(0.36, 0.1), material(VIOLET, VIOLET_DEEP), root, [0.06, -0.06], { rot: -Math.PI / 4 });
-      shape(`${name}-rim`, arcPts(0.17, 0.08, 0, 360, 24), material(VIOLET, VIOLET_DEEP), root, [-0.06, 0.06]);
-    }
+    shape(`${name}-teeth`, starPts(0.3, 0.2, 8), material(SKY, SKY_DEEP), root);
+    shape(`${name}-wheel`, circlePts(0.22, null, null, 20), material(SKY, SKY_DEEP), root);
+    shape(`${name}-hole`, circlePts(0.09, null, null, 12), material(INK900), root);
     return root;
   }
 
-  /* The computer that every agent gets its tools from: shelves of tools, and under them a dark
-     panel, where folders are listed. panel is the panel's middle and size, and rows the places
-     for folders on it, all from the computer's middle for a computer of scale 1. */
-  function store(name, parent, loc, scale = 1.0) {
+  /* The computer that the agents share: a tall case with three lamps, and a dark panel that lists
+     the folders made on it. rows gives the places for five folders of scale 0.8 on the panel,
+     from the computer's middle for a computer of scale 1. */
+  function shared(name, parent, loc, scale = 1.0) {
     const [w, h] = [5.2, 6.2];
     const root = group(name, parent, loc, scale);
     shape(`${name}-shadow`, rrectPts(w + 0.7, h + 0.7, 0.6), glowMaterial(INK900, 0.7, 0.8), root, [0.12, -0.18]);
     shape(`${name}-foot`, rrectPts(w * 0.8, 0.18, 0.08), material(INK600), root, [0, -h / 2 - 0.05]);
     shape(`${name}-case`, rrectPts(w, h, 0.3), material(INK500, INK600), root);
     shape(`${name}-face`, rrectPts(w - 0.3, h - 0.3, 0.2), material(INK700, INK800), root);
-    const lamps = [0, 1, 2].map((i) => shape(`${name}-lamp${i}`, circlePts(0.06, null, null, 10), material([SKY, MINT, AMBER][i]), root, [-2.05 + i * 0.24, 2.72]));
-    for (let r = 0; r < 2; r++) {
-      const y = 2.0 - r * 1.1;
-      shape(`${name}-shelf${r}`, rrectPts(w - 0.9, 0.08, 0), material(INK500), root, [0, y - 0.42]);
-      for (let c = 0; c < 4; c++) tool(`${name}-tool${r}${c}`, root, [-1.5 + c * 1.0, y], r * 4 + c + r, 0.9);
-    }
-    const panel = { at: [0, -1.5], w: 4.5, h: 2.5 };
+    const lamps = [0, 1, 2].map((i) => shape(`${name}-lamp${i}`, circlePts(0.06, null, null, 10), material([SKY, MINT, AMBER][i]), root, [-2.05 + i * 0.24, 2.6]));
+    const panel = { at: [0, -0.2], w: 4.5, h: 4.9 };
     shape(`${name}-panel`, rrectPts(panel.w, panel.h, 0.16), material(INK900), root, panel.at);
-    const rows = [0, 1, 2, 3, 4].map((r) => [panel.at[0] - panel.w / 2 + 0.45, panel.at[1] + panel.h / 2 - 0.36 - r * 0.45]);
+    const rows = [0, 1, 2, 3, 4].map((r) => [panel.at[0] - panel.w / 2 + 0.6, panel.at[1] + panel.h / 2 - 0.65 - r * 0.9]);
     return { root, panel, rows, lamps, w, h, scale, at: [loc[0], loc[1]] };
   }
 
@@ -801,11 +765,70 @@ const parts = (() => {
     return { root, door, boxes, w, h, scale };
   }
 
+  /* A way into a building that is not its door: a small dark opening with a lit rim. */
+  function hatch(name, parent, loc, scale = 1.0) {
+    const root = group(name, parent, loc, scale);
+    shape(`${name}-glow`, circlePts(0.95), glowMaterial(MINT, 0.6), root);
+    shape(`${name}-rim`, rrectPts(0.78, 0.92, 0.2), material(MINT, MINT_DEEP), root);
+    shape(`${name}-hole`, rrectPts(0.6, 0.74, 0.14), material(INK900), root);
+    return root;
+  }
+
+  // ---------------------------------------------------------------- ideas, arrows, and headings
+
+  /* An idea: a lit bulb. */
+  function idea(name, parent, loc, scale = 1.0) {
+    const root = group(name, parent, loc, scale);
+    shape(`${name}-glow`, circlePts(0.75), glowMaterial(AMBER, 0.6), root, [0, 0.08]);
+    shape(`${name}-base`, rrectPts(0.26, 0.24, 0.05), material(MIST, SLATE), root, [0, -0.28]);
+    shape(`${name}-glass`, circlePts(0.3), material('#fff2c4', AMBER), root, [0, 0.08]);
+    return root;
+  }
+
+  /* An arrow that points along the x axis from its origin and is length long. rot turns it. */
+  function arrow(name, parent, loc, length = 0.95, colour = PAPER, rot = 0.0) {
+    const root = group(name, parent, loc, 1.0, rot);
+    branch(`${name}-shaft`, root, [0, 0], [length - 0.3, 0], colour, 0.1, 1.0);
+    shape(`${name}-head`, [[length - 0.36, 0.22], [length, 0], [length - 0.36, -0.22]], material(colour), root);
+    return root;
+  }
+
+  /* Three small discs in a row, for the three things the film counts. lit lists the ones that are
+     bright, counted from 0, and the others are dim. */
+  function three(name, parent, loc, lit = [0, 1, 2], scale = 1.0) {
+    const root = group(name, parent, loc, scale);
+    const discs = [0, 1, 2].map((k) => {
+      const disc = group(`${name}-disc${k}`, root, [(k - 1) * 0.62, 0]);
+      const on = lit.includes(k);
+      if (on) shape(`${name}-glow${k}`, circlePts(0.55), glowMaterial(AMBER, 0.6), disc);
+      shape(`${name}-rim${k}`, circlePts(0.23, null, null, 24), material(on ? AMBER_DEEP : SLATE), disc);
+      shape(`${name}-face${k}`, circlePts(0.17, null, null, 24), on ? material('#fff2c4', AMBER) : material(INK700), disc);
+      return disc;
+    });
+    return { root, discs };
+  }
+
+  /* The heading of a scene on one of the film's three behaviours: three discs, with the one that
+     which picks lit, and the behaviour's name. It pops in at t and stays at the top left of the
+     screen while the camera moves along path. */
+  function heading(st, path, which, label, t) {
+    const root = empty('heading', st.raw.front, [0, 0, nextZ(st.raw.front)]);
+    pin(root, path, [-6.3, 3.7], st.raw.front);
+    const inner = group('heading-in', root, [0, 0]);
+    const wide = 2.5 + 0.27 * label.length;
+    shape('heading-plate', rrectPts(wide, 0.92, 0.46).map(([x, y]) => [x + wide / 2 - 1.1, y]), material(INK900, null, 0.72), inner);
+    three('heading-count', inner, [0, 0], [which]);
+    text('heading-name', label, 0.5, material(PAPER), inner, [1.2, -0.02], { align: 'LEFT' });
+    kit.pop(inner, t, 1.0, 0.4);
+    return root;
+  }
+
   return {
-    STEP, BODIES, begin, group, stage, ramp, edge, zoom, body, agent, mini, miniOff, bob, mood, blink, live, off, dark,
-    move, vanish, pulse, shake, spark, along, send,
-    folder, write, slip, board, post, sides, crowd, gathering, clock, drain, word, lock, doorKey, sheet, writing, check, cross,
-    fire, bowl, heart, human, computer, flicker, scorer, light, thought, notion, room, target, tool, store, building,
+    STEP, BODIES, begin, group, stage, ramp, edge, zoom, body, agent, mini, bob, mood, blink, live, off,
+    move, vanish, pulse, shake, spark, along, send, pin,
+    folder, write, slip, board, post, sides, crowd, gathering, clock, drain, word, lock, sheet, writing, check, cross,
+    fire, bowl, heart, human, computer, flicker, scorer, light, thought, notion, room, target, gear, shared, building, hatch,
+    idea, arrow, three, heading,
   };
 })();
 

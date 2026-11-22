@@ -1,10 +1,10 @@
-/* Scene 17: A case to study.
+/* Scene 15: A case to study.
 
 A question mark, and then a wall of small folders that fills the frame, with
 a count on it and the agents' written thinking over it. Three researchers
 stand in front of the wall. On the left a card opens: people, an arrow, and
-agents. On the right another: four agents by themselves, a light over each,
-and lines growing between them.
+agents. On the right another: four agents by themselves, and lines growing
+between them.
 */
 'use strict';
 
@@ -17,12 +17,11 @@ function build(T) {
   const cues = [];
   const end = sec(kit.frames());
   const tCase = T.at(0, 0.24);
-  const tSeventy = T.at(0, 0.45);
-  const tThinking = T.at(0, 0.75);
+  const tSeventy = T.at(0, 0.42);
+  const tThinking = T.at(0, 0.7);
   const tCopied = T.start(1);
   const tOr = T.start(2);
-  const tIntelligent = T.at(2, 0.55);
-  const tTalk = T.at(2, 0.75);
+  const tSociety = T.at(2, 0.3);
 
   kit.backdrop(5);
   kit.motes(16, 17);
@@ -37,7 +36,7 @@ function build(T) {
   const inks = [0, 1, 2, 3, 4, 5].map((which) => kit.material(parts.body(which)[0], null, 0.85));
   for (let c = 0; c < WALL.cols; c++) {
     for (let r = 0; r < WALL.rows; r++) {
-      const slip = kit.shape(`slip${c}_${r}`, kit.rrectPts(0.17, 0.12, 0), inks[c + r ? 1 + rnd.randrange(5) : 0], st.back, [WALL.x0 + c * WALL.step, WALL.y0 - r * WALL.step]);
+      const slip = kit.shape(`slip${c}_${r}`, kit.rrectPts(0.17, 0.12, 0), inks[1 + rnd.randrange(5)], st.back, [WALL.x0 + c * WALL.step, WALL.y0 - r * WALL.step]);
       kit.appear(slip, tCase + 2.2 * (c / WALL.cols) + 0.4 * rnd.random(), null, 0.12);
     }
   }
@@ -70,40 +69,32 @@ function build(T) {
     return root;
   };
 
-  // ------------------------------------------------------------ it may show that the agents copied all of this from humans
+  // ------------------------------------------------------------ it may show that the agents copied all of this from people
   cardAt('copied', COPIED, tCopied);
   [-1.95, -1.25].forEach((dx, k) => kit.pop(parts.human(`model${k}`, st.cast, [COPIED[0] + dx, COPIED[1] - 1.1], 0.3, k + 2, 1).root, tCopied + 0.3 + 0.1 * k, 0.3, 0.35));
-  const gives = parts.group('copied-gives', st.front, [COPIED[0] - 0.55, COPIED[1] - 0.2]);
-  kit.branch('copied-shaft', gives, [0, 0], [0.7, 0], kit.PAPER, 0.1, 1.0);
-  kit.shape('copied-head', [[0.62, 0.24], [1.02, 0], [0.62, -0.24]], kit.material(kit.PAPER), gives);
-  kit.pop(gives, tCopied + 0.8, 1.0, 0.3);
+  kit.pop(parts.arrow('copied-gives', st.front, [COPIED[0] - 0.55, COPIED[1] - 0.2], 1.0), tCopied + 0.8, 1.0, 0.3);
   [[1.1, 0.15, 1], [1.85, -0.5, 3]].forEach(([dx, dy, which], k) => {
     kit.pop(parts.mini(`copier${k}`, st.cast, [COPIED[0] + dx, COPIED[1] + dy], 0.5, which).root, tCopied + 1.1 + 0.12 * k, 0.5, 0.3);
   });
   cues.push({ t: tCopied + 0.8, type: 'whoosh', gain: 0.5 });
 
-  // ------------------------------------------------------------ or that some of it comes from being intelligent, and able to talk
+  // ------------------------------------------------------------ or that some of what makes a society does not come from being human
   cardAt('own', OWN, tOr);
   const FOUR = [[-1.3, 0.55, 1], [1.3, 0.55, 4], [-1.3, -0.75, 2], [1.3, -0.75, 5]];
   FOUR.forEach(([dx, dy, which], k) => {
-    const at = [OWN[0] + dx, OWN[1] + dy];
-    kit.pop(parts.mini(`own${k}`, st.cast, at, 0.5, which).root, tOr + 0.4 + 0.12 * k, 0.5, 0.3);
-    const light = parts.group(`light${k}`, st.front, [at[0] + 0.5, at[1] + 0.55]);
-    kit.shape(`light${k}-glow`, kit.circlePts(0.42), kit.glowMaterial(kit.AMBER, 0.7), light);
-    kit.shape(`light${k}-star`, kit.starPts(0.2, 0.07), kit.material('#fff2c4'), light);
-    kit.pop(light, tIntelligent + 0.15 * k, 1.0, 0.3);
-    cues.push({ t: tIntelligent + 0.15 * k, type: 'blip', pitch: 1.0 + 0.1 * k, gain: 0.6 });
+    kit.pop(parts.mini(`own${k}`, st.cast, [OWN[0] + dx, OWN[1] + dy], 0.5, which).root, tOr + 0.4 + 0.12 * k, 0.5, 0.3);
+    cues.push({ t: tOr + 0.4 + 0.12 * k, type: 'blip', pitch: 1.0 + 0.1 * k, gain: 0.6 });
   });
   const talk = parts.group('own-talk', st.props, [0, 0]);        // made after the card, so that its lines lie over the card
   [[0, 1], [2, 3], [0, 2], [1, 3], [0, 3], [1, 2]].forEach(([i, j], k) => {
     const from = [OWN[0] + FOUR[i][0] * 0.6, OWN[1] + FOUR[i][1] * 0.6 - 0.05];
     const to = [OWN[0] + FOUR[j][0] * 0.6, OWN[1] + FOUR[j][1] * 0.6 - 0.05];
-    kit.grow(kit.branch(`own-link${k}`, talk, from, to, kit.MINT, 0.08, 0.9), tTalk + 0.15 * k, 0.35);
-    cues.push({ t: tTalk + 0.15 * k, type: 'tick', pitch: 1.0 + 0.08 * k, gain: 0.6 });
+    kit.grow(kit.branch(`own-link${k}`, talk, from, to, kit.MINT, 0.08, 0.9), tSociety + 0.15 * k, 0.35);
+    cues.push({ t: tSociety + 0.15 * k, type: 'tick', pitch: 1.0 + 0.08 * k, gain: 0.6 });
   });
   const which = [kit.ring('which0', st.front, COPIED, 2.3, kit.PAPER, 0.06), kit.ring('which1', st.front, OWN, 2.3, kit.PAPER, 0.06)];
   kit.flash(which[0], tCopied + 1.6, 0.9, 0.15);
-  kit.flash(which[1], end - 2.2, 0.9, 0.15);
+  kit.flash(which[1], end - 1.8, 0.9, 0.15);
 
   // ------------------------------------------------------------ camera
   kit.camera(parts.ramp([[0, [0, 0.6, 18.5]], [tCase + 1.6, [0, -0.1, 20.5]], [tCopied - 0.3, [0, -0.3, 21]], [tCopied + 1.0, [-0.5, -0.45, 21]],
