@@ -24,6 +24,7 @@
 - [One idea at a time](one-idea-at-a-time.md) — each scene carries one idea; cut true but extra details, and scenes that the story can do without
 - [Every word has a purpose](every-word-has-a-purpose.md) — each word of a script does a job; a clause that does none is cut, however well it reads
 - [A colon before what a sentence announces](a-colon-before-what-a-sentence-announces.md) — in a script, a sentence that announces what the next one gives ends in a colon, and the next starts with a capital
+- [Few clauses joined with "and"](few-clauses-joined-with-and.md) — a script rarely joins two clauses with a comma and "and"; two sentences, or no comma; a list of three keeps its Oxford comma
 - [At most three things](at-most-three-things.md) — a viewer holds at most three things at once; a named list has three items or fewer, and pairs do not get round it
 
 ## The autopilot
