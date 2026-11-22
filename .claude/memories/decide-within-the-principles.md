@@ -20,4 +20,4 @@ Claude's interpretation, which the user has not confirmed:
 
 - The rule holds for every production (see [The repo is a media factory](the-repo-is-a-media-factory.md)), and for a piece of work from its start through its commit, its push, and the watch on its runs (see [Every run is watched](every-run-is-watched.md)).
 - It does not reach what a memory keeps for the user: the mark that a script is ready (see [No video before the script is ready](no-video-before-the-script-is-ready.md)), and the audience, look, voice, music, and length of a new production.
-- It does not reach an action that cannot be undone, such as publishing a release; that still waits for the user's word.
+- Releasing a film is not a choice to make: the `productions` workflow releases the film in the run that renders it, per [Render in GitHub workflows](render-in-github-workflows.md). The rule does not reach an action that cannot be undone and that no workflow does, such as deleting a release; that waits for the user's word.

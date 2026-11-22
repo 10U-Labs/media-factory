@@ -5,7 +5,7 @@
 - [The repo is a media factory](the-repo-is-a-media-factory.md) — many productions, the Gödel film is the first; keep one production's material out of shared code; the README repeats the code's settings and names, so it changes with them; which memories hold for every production
 - [Decide within the principles](decide-within-the-principles.md) — where the principles and the memories settle a choice, make it and carry on without asking; the ready mark and a new production's taste choices stay the user's
 - [Never quote the user verbatim](never-quote-the-user-verbatim.md) — restate what the user says in fresh words in memories, commits, comments, and summaries
-- [Render in GitHub workflows](render-in-github-workflows.md) — no local renders; push and let Actions render, fetch artifacts with gh; a manual run with release=true publishes a production; a release holds only the film and its captions
+- [Render in GitHub workflows](render-in-github-workflows.md) — no local renders; push and let Actions render, fetch artifacts with gh; the run that renders a production also releases its film; a release holds only the film and its captions
 - [No video before the script is ready](no-video-before-the-script-is-ready.md) — a script is a draft until its production.toml says ready = true; the workflow renders nothing for a draft; the mark is the user's to give
 - [Free tools only](free-tools-only.md) — nothing paid, for voice or anything else; open-source models on free runners, licence checked
 - [A release is numbered by the time](a-release-is-numbered-by-the-time.md) — tag is v plus the fourteen-digit UTC time, as in the sibling repos; never a count; the production's name comes first here
@@ -13,6 +13,7 @@
 - [Long-running commands in the background](long-running-commands-in-the-background.md) — anything past about a minute is a background Bash call with a time limit; no foreground wait after it
 - [A wait runs in the background](a-wait-runs-in-the-background.md) — wait for a workflow run with background Bash or Monitor, never a foreground sleep or gh run watch; --interval 60
 - [Working without subagents](working-without-subagents.md) — no Agent or Workflow call, whatever the work's size; denied in the tracked settings.json, lifted only by the user's own ask
+- [A rule the repo can enforce goes in a workflow](a-rule-the-repo-can-enforce-goes-in-a-workflow.md) — what must happen every time is built into a workflow or the code, not left to a memory; a memory holds what cannot be automated
 - [Memory links are Markdown links](memory-links-are-markdown-links.md) — link memories as title plus file name, never with double brackets
 - [A memory says what holds now](a-memory-says-what-holds-now.md) — the rule, its reason, and how to apply it, in the present tense; no dates, no account of what was said or done, no note of where a rule came from
 - [Every production tells a story](every-production-tells-a-story.md) — the story need not be factual, the science must be; it is told straight through in three acts, in a storyteller's voice and not a classroom's, with nothing stopping it at the start; it rises to its end: the highest point is in the last act, and the last line hits; what is made up is said after it; but/therefore joins, inside scenes too

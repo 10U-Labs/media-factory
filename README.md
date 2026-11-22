@@ -14,7 +14,7 @@ A production goes through five steps. Each is a tool under `src/`:
 4. `src/render/assemble.py` joins the clips and the soundtrack into the finished video, which the code calls the film.
 5. `src/render/captions.py` writes the closed captions from the script's lines and their timings.
 
-The workflows in `.github/workflows/` run these steps. Nothing is rendered on a developer's machine.
+The workflows in `.github/workflows/` run these steps, and then publish the finished film as a release. Nothing is rendered on a developer's machine.
 
 Hyperframes and everything it depends on are installed at the versions that `package-lock.json` gives. Hyperframes sends usage data to its maker unless it is told not to, so the render workflow sets `HYPERFRAMES_NO_TELEMETRY` and `DO_NOT_TRACK`.
 
@@ -152,7 +152,7 @@ A file that leaves the line out, or gives `false`, has a draft, so a new product
 - a push that changes the production's folder renders nothing for it, and the run says so in a notice;
 - a run started by hand for the production fails, and says that the script is a draft.
 
-The push that marks the script ready changes the production's folder, so it renders the production for the first time. Taking the line out again makes the script a draft once more.
+The push that marks the script ready changes the production's folder, so it renders the production for the first time and publishes its film (see [Release a production](#release-a-production)). Taking the line out again makes the script a draft once more.
 
 ## A scene
 
@@ -232,7 +232,7 @@ What only one production's scenes draw goes in a script directly in the producti
 
 ### Render a production
 
-A push to `main` that changes anything in `productions/<name>/` renders that production, once its script is marked ready (see [Draft and ready](#draft-and-ready)). A push that changes only shared code renders nothing by itself. To render after such a push, or at any other time, start the workflow by hand:
+A push to `main` that changes anything in `productions/<name>/` renders that production and releases its film, once its script is marked ready (see [Draft and ready](#draft-and-ready)). A push that changes only shared code renders nothing by itself. To render after such a push, or at any other time, start the workflow by hand:
 
 ```sh
 gh workflow run productions.yml -f production=<name>
@@ -288,15 +288,15 @@ gh workflow run productions.yml -f production=<name> -f adopt=<run id>
 
 Every scene that has no clip under its new name takes the earlier run's clip of the scene. Nothing checks that the pictures are the same: a scene's clip is taken whatever has changed in the scene since. So adopt before a change that alters a picture, never after.
 
-### Keep a production
+### Release a production
 
-To keep a production longer than 90 days, publish it as a GitHub release:
+A run that renders a production ends by publishing its film as a GitHub release. So the film of a script that is marked ready is released without anyone asking for it, and so is every later correction. A push always does this. A run started by hand does it unless it is told not to:
 
 ```sh
-gh workflow run productions.yml -f production=<name> -f release=true
+gh workflow run productions.yml -f production=<name> -f release=false
 ```
 
-The run ends by making a release tagged `<name>-v<time>`, where the time is the moment the release is made, in UTC, as fourteen digits: `godel-machines-v20261115172101`. The release holds the film and its captions, and nothing else: no scene clips. The repository is public, so anyone can see a release. No push makes one.
+A release is tagged `<name>-v<time>`, where the time is the moment the release is made, in UTC, as fourteen digits: `godel-machines-v20261115172101`. It holds the film and its captions, and nothing else: no scene clips. The repository is public, so anyone can see a release. A release is kept, where a run's artifacts are deleted after 90 days. Each run adds a release, and the earlier ones stay.
 
 Fetch a released film and its captions with the tag:
 
@@ -313,6 +313,6 @@ Once a scene's artifact is gone, the next run renders the scene again, since no 
 | `godel-machines` | Machines That Rewrite Themselves | A film of nearly four minutes on recursive self-improvement and three machines built on it: the Gödel Machine, the Darwin Gödel Machine, and the Huxley-Gödel Machine |
 | `ultron-self-improving-ai` | Is Ultron a Self-Improving AI? | A film of a little over three minutes that asks whether Ultron, the artificial intelligence of the 2015 film Avengers: Age of Ultron, is what computer science calls a self-improving AI, and answers yes. Its script is a draft, so nothing is rendered for it. Its scenes are written for Blender, which rendered the factory's pictures before Hyperframes did, and they are written again as page scripts once the script is ready |
 | `are-agents-sentient` | Are Agents Sentient? What the Hugging Face Incident Showed | A film on what AI agents wrote to each other during the Hugging Face incident of July 2026, which looks there for three signs of sentience: emotions, a sense of self, and care for others. Its script is a draft, so it has no film yet |
-| `did-agents-form-a-society` | Did AI Agents Form Their Own Society? What the Hugging Face Incident Reveals | A film of nearly six minutes on what AI agents did as a group during the Hugging Face incident of July 2026. It tells first, and briefly, the story of Pip, a made-up agent that does only what real agents did, and then finds in it three things that people do when they form a society: a shared belief, peer influence, and altruism. It asks whether such parts of social life come from being human or from being intelligent and able to talk to others. The film in its releases, of nearly eleven minutes, is from an earlier draft of the script |
+| `did-agents-form-a-society` | Did AI Agents Form Their Own Society? What the Hugging Face Incident Reveals | A film of nearly six minutes on what AI agents did as a group during the Hugging Face incident of July 2026. It tells first, and briefly, the story of Pip, a made-up agent that does only what real agents did, and then finds in it three things that people do when they form a society: a shared belief, peer influence, and altruism. It asks whether such parts of social life come from being human or from being intelligent and able to talk to others. An earlier release holds a film of nearly eleven minutes, made from an earlier draft of the script |
 
 Each finished production's film is in its [releases](https://github.com/10U-Labs/media-factory/releases).

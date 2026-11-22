@@ -57,7 +57,7 @@ jobs:
     with:
       adopt: ${{ inputs.adopt }}
       production: ${{ matrix.production }}
-      release: ${{ inputs.release == true }}
+      release: ${{ github.event_name == 'push' || inputs.release == true }}
   yamllint:
     runs-on: ubuntu-latest
     steps:
@@ -96,8 +96,8 @@ on:
         required: true
         type: string
       release:
-        default: false
-        description: Publish the film and its captions as a GitHub release, which anyone can see
+        default: true
+        description: Publish the film and its captions as a GitHub release, which anyone can see, as a push always does
         required: false
         type: boolean
 permissions:

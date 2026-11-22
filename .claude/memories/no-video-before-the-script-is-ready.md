@@ -14,7 +14,7 @@ No video is made from a production while its script is a draft: the script is ju
 
 **Why:** No reason comes with it. Claude's interpretation: a script changes a great deal while it is drafted, a scene's pictures are timed to its narration, and a render takes hours of the runners that the organization's repos share, so most of a video made from a draft is made again.
 
-**How to apply:** The mark is the line `ready = true` in the production's `production.toml`. A file without the line has a draft, so a new production starts as one. The `productions` workflow renders nothing for a draft: a push skips the production with a notice, and a run started by hand fails. The `voices` workflow makes no video, so it runs for a draft. The push that adds the line renders the production, per [Render in GitHub workflows](render-in-github-workflows.md).
+**How to apply:** The mark is the line `ready = true` in the production's `production.toml`. A file without the line has a draft, so a new production starts as one. The `productions` workflow renders nothing for a draft: a push skips the production with a notice, and a run started by hand fails. The `voices` workflow makes no video, so it runs for a draft. The push that adds the line renders the production and releases its film, per [Render in GitHub workflows](render-in-github-workflows.md).
 
 Claude's interpretation, which the user has not confirmed:
 
