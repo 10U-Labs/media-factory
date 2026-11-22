@@ -22,7 +22,7 @@ function build(T) {
   const RECORDS = [HF[0], HF[1] + 0.35];
   const GROUND = -3.2;
   const HATCH = [HF[0] - 2.25, HF[1] - 1.68];
-  const BOARD = [-6.3, 2.35];
+  const BOARD = [-6.3, 2.15];
   const POSTS = [[BOARD[0] - 1.2, BOARD[1] + 0.9], [BOARD[0] - 1.2, BOARD[1] + 0.1]];
   const B_HOME = [-0.8, -2.9];
   const B_WALL = [2.3, -2.2];
