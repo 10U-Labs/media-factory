@@ -583,9 +583,9 @@ const kit = (() => {
      The figure is widest at the shoulders and narrows to the hips, and its legs are about as
      long as its jacket. The origin is at the shoulders, and the feet are 4.3 below it. facing 1
      looks right, -1 looks left. The working arm hangs at angle 0 and rotates about the shoulder
-     toward where the figure faces. */
+     toward where the figure faces. It holds a pen, which options.pen: false leaves out. */
   function person(name, parent, loc = [0, 0], scale = 1.0, options = {}) {
-    const { coat = '#5566c2', coatDeep = INK500, hair = '#3b2a26', facing = 1 } = options;
+    const { coat = '#5566c2', coatDeep = INK500, hair = '#3b2a26', facing = 1, pen = true } = options;
     const root = empty(name, parent, [loc[0], loc[1], nextZ(parent)], scale);
     const body = empty(`${name}-body`, root, [0, 0, 0]);
     shape(`${name}-legs`, [[-0.5, -2.1], [0.5, -2.1], [0.46, -4.3], [0.1, -4.3], [0, -2.75], [-0.1, -4.3], [-0.46, -4.3]], material(INK900, INK800), body);
@@ -611,7 +611,7 @@ const kit = (() => {
     const shoulder = empty(`${name}-shoulder`, body, [0.7 * facing, -0.28, nextZ(body)]);
     shape(`${name}-arm`, capsulePts(1.5, 0.3), material(coat, coatDeep), shoulder);
     shape(`${name}-hand`, circlePts(0.15), material(SKIN, SKIN_SHADE), shoulder, [0, -1.55]);
-    shape(`${name}-pen`, rrectPts(0.06, 0.42, 0.03).map(([x, y]) => [x, y - 1.75]), material(INK900), shoulder);
+    if (pen) shape(`${name}-pen`, rrectPts(0.06, 0.42, 0.03).map(([x, y]) => [x, y - 1.75]), material(INK900), shoulder);
     return { root, body, head, arm: shoulder, facing };
   }
 
