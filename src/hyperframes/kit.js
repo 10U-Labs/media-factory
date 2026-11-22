@@ -577,20 +577,29 @@ const kit = (() => {
 
   // ---------------------------------------------------------------- people
 
-  /* A simple standing figure, not anyone's likeness: coat, head, hair, eyes, and one working arm.
+  /* A simple standing figure, not anyone's likeness: a jacket, legs, a head with hair and eyes,
+     and two arms, of which the one in front works.
 
-     The origin is at the shoulders. facing 1 looks right, -1 looks left. The working arm hangs
-     at angle 0 and rotates about the shoulder toward where the figure faces. */
+     The figure is widest at the shoulders and narrows to the hips, and its legs are about as
+     long as its jacket. The origin is at the shoulders, and the feet are 4.3 below it. facing 1
+     looks right, -1 looks left. The working arm hangs at angle 0 and rotates about the shoulder
+     toward where the figure faces. */
   function person(name, parent, loc = [0, 0], scale = 1.0, options = {}) {
     const { coat = '#5566c2', coatDeep = INK500, hair = '#3b2a26', facing = 1 } = options;
     const root = empty(name, parent, [loc[0], loc[1], nextZ(parent)], scale);
     const body = empty(`${name}-body`, root, [0, 0, 0]);
-    shape(`${name}-legs`, [[-0.55, -2.6], [0.55, -2.6], [0.5, -4.3], [0.12, -4.3], [0, -3.0], [-0.12, -4.3], [-0.5, -4.3]], material(INK900, INK800), body);
-    shape(`${name}-coat`, [[-0.75, -0.15], [-0.45, 0.08], [0, 0.13], [0.45, 0.08], [0.75, -0.15], [0.85, -1.4], [0.95, -2.8], [-0.95, -2.8], [-0.85, -1.4]],
+    shape(`${name}-legs`, [[-0.5, -2.1], [0.5, -2.1], [0.46, -4.3], [0.1, -4.3], [0, -2.75], [-0.1, -4.3], [-0.46, -4.3]], material(INK900, INK800), body);
+    for (const side of [-1, 1]) {
+      shape(`${name}-shoe${side}`, rrectPts(0.5, 0.17, 0.08), material(INK900), body, [side * 0.28 + 0.07 * facing, -4.3]);
+    }
+    const far = empty(`${name}-far-shoulder`, body, [-0.7 * facing, -0.28, 0], 1.0, -0.06 * facing);     // behind the jacket
+    shape(`${name}-far-arm`, capsulePts(1.4, 0.28), material(coat, coatDeep), far);
+    shape(`${name}-far-hand`, circlePts(0.14), material(SKIN, SKIN_SHADE), far, [0, -1.45]);
+    shape(`${name}-coat`, [[-0.82, -0.22], [-0.5, 0.08], [0, 0.13], [0.5, 0.08], [0.82, -0.22], [0.74, -1.3], [0.62, -2.35], [-0.62, -2.35], [-0.74, -1.3]],
       material(coat, coatDeep), body, [0, 0], { smooth: true });
     shape(`${name}-collar`, [[-0.22, 0.08], [0.22, 0.08], [0, -0.5]], material(PAPER), body);
-    shape(`${name}-neck`, rrectPts(0.28, 0.34, 0.12), material(SKIN_SHADE), body, [0, 0.16]);
-    const head = empty(`${name}-head`, body, [0.05 * facing, 0.68, nextZ(body)]);
+    shape(`${name}-neck`, rrectPts(0.3, 0.36, 0.12), material(SKIN_SHADE), body, [0, 0.17]);
+    const head = empty(`${name}-head`, body, [0.05 * facing, 0.74, nextZ(body)], 1.15);
     shape(`${name}-face`, circlePts(0.44), material(SKIN, SKIN_SHADE), head);
     shape(`${name}-ear`, circlePts(0.08), material(SKIN_SHADE), head, [-0.4 * facing, -0.02]);
     shape(`${name}-hair`, [[-0.47 * facing, 0.02], [-0.44 * facing, 0.32], [-0.12 * facing, 0.52], [0.28 * facing, 0.48], [0.46 * facing, 0.2], [0.3 * facing, 0.26], [-0.2 * facing, 0.22]],
@@ -599,7 +608,7 @@ const kit = (() => {
       shape(`${name}-eye${side}`, circlePts(0.045, null, 0.06), material(INK900), head, [0.1 * facing + side * 0.13, 0.0]);
     }
     shape(`${name}-smile`, arcPts(0.1, 0.035, 210, 330), material(INK900), head, [0.1 * facing, -0.14]);
-    const shoulder = empty(`${name}-shoulder`, body, [0.62 * facing, -0.25, nextZ(body)]);
+    const shoulder = empty(`${name}-shoulder`, body, [0.7 * facing, -0.28, nextZ(body)]);
     shape(`${name}-arm`, capsulePts(1.5, 0.3), material(coat, coatDeep), shoulder);
     shape(`${name}-hand`, circlePts(0.15), material(SKIN, SKIN_SHADE), shoulder, [0, -1.55]);
     shape(`${name}-pen`, rrectPts(0.06, 0.42, 0.03).map(([x, y]) => [x, y - 1.75]), material(INK900), shoulder);
