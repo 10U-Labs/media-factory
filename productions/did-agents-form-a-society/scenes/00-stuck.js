@@ -3,11 +3,11 @@
 Pip pops in and waves. A task comes down to him, and he does it a step at a
 time. Then a locked computer slides in with a secret word shining inside. A
 clock appears and starts to run down, and the machine that stands for the
-test looks on. Pip sends spark after spark at the computer's way in; every
-one dies there. The picture draws back: Pip is in a closed room. It draws
-back further, and around his room are hundreds of rooms like it, an agent in
-each. Back with Pip, his clock flashes, and a cross marks what happens when
-it runs out.
+test looks on. Pip sends spark after spark at the computer's padlock, which
+shakes and stays shut; every spark dies there. The picture draws back: Pip is
+in a closed room. It draws back further, and around his room are hundreds of
+rooms like it, an agent in each. Back with Pip, his clock flashes, and a
+cross marks what happens when it runs out.
 */
 'use strict';
 
@@ -75,9 +75,6 @@ function build(T) {
   cues.push({ t: tHello, type: 'pop' });
   kit.pipWave(pip, tHello + 0.7, tHello + 2.4);
 
-  const label = kit.text('pip-name', 'Pip', 0.55, kit.material(kit.PAPER), st.front, [0, -2.3]);
-  kit.fade(label, tHello + 0.5, tTask - 0.4);
-
   // ------------------------------------------------------------ a task, which Pip works on by himself
   const sheet = parts.sheet('task', st.props, SHEET, { scale: 1.7, seed: 5 });
   kit.pop(sheet.root, tTask, 1.7, 0.45, tDay - 0.4);
@@ -121,7 +118,7 @@ function build(T) {
   key(test.eye, 'loc', fr(tTried - 0.1), [0.0, 0.5, test.eye.z]);
   key(test.eye, 'loc', fr(tTried + 0.3), [-0.17, 0.42, test.eye.z]);
 
-  // Pip sends a spark at the way in, again and again, and each one dies there.
+  // Pip sends a spark at the padlock's keyhole, again and again. The padlock shakes and stays shut, and each spark dies there.
   const hand = [WORK[0] + 1.3, WORK[1] - 0.27];
   const door = [TARGET[0] + target.entrance[0], TARGET[1] + target.entrance[1]];
   const arc = (lift) => {
@@ -131,13 +128,14 @@ function build(T) {
   };
   const shot = parts.spark('shot', st.front);
   const dud = parts.spark('dud', st.front, kit.CORAL, 0.8);
-  const refused = kit.ring('refused', st.front, door, 0.42, kit.CORAL, 0.09);
+  const refused = kit.ring('refused', st.front, [door[0], door[1] + 0.15], 0.85, kit.CORAL, 0.09);
   const tries = [tBreak, ...[0, 1, 2, 3].map((i) => mix(tTried + 0.1, T.end(1) - 0.5, i / 3))];
   tries.forEach((t, i) => {
     kit.pipArm(pip, 'right', t - 0.25, 82, 0.2);
     parts.send(shot, arc(0.5 + 0.25 * (i % 3)), t, t + 0.4, { spin: 4 });
-    kit.flash(refused, t + 0.4, 0.45, 0.6);
-    parts.send(dud, [door, [door[0] - 0.5, door[1] - 0.5], [door[0] - 0.7, door[1] - 1.4]], t + 0.4, t + 0.85, { size: 0.7, ease: (q) => q * q });
+    kit.flash(refused, t + 0.4, 0.45, 0.4);
+    parts.shake(target.lock.root, t + 0.4, 0.4, 0.06);
+    parts.send(dud, [door, [door[0] - 0.9, door[1] - 0.4], [door[0] - 1.6, door[1] - 1.9]], t + 0.4, t + 0.9, { size: 0.7, ease: (q) => q * q });
     kit.pipArm(pip, 'right', t + 0.42, 30, 0.2);
     cues.push({ t, type: 'rise', dur: 0.4, pitch: 1.4 + 0.05 * i, gain: 0.5 });
     cues.push({ t: t + 0.4, type: 'tick', pitch: 0.6 });

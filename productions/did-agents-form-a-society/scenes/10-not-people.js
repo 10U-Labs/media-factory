@@ -1,11 +1,12 @@
-/* Scene 12: Not people.
+/* Scene 10: Not people.
 
 Three pictures of people in a row: two share a bowl of food by a fire; a line
-of people stretches back into the distance; two face each other with a heart
-between them. Under each, the same picture for an agent: an agent beside a
-bowl with a cross on it; an agent with empty rings where the line would be;
-two agents with a grey heart between them, and a question mark on it. Then
-the pictures of people go, and a large question mark stands in their place.
+of people stretches back into the distance; a man and a woman face each other
+with a heart between them. Under each, the same picture for an agent: an
+agent beside a bowl with a cross on it; an agent with empty rings where the
+line would be; two agents with a grey heart between them, and a question mark
+on it. Then the pictures of people go, and a large question mark stands in
+their place.
 */
 'use strict';
 
@@ -67,7 +68,7 @@ function build(T) {
   });
 
   // ------------------------------------------------------------ people have feelings for each other
-  const lovers = [parts.human('lover0', st.cast, [COLS[2] - 1.25, TOP], 0.46, 4, 1), parts.human('lover1', st.cast, [COLS[2] + 1.25, TOP], 0.46, 2, -1)];
+  const lovers = [parts.human('lover0', st.cast, [COLS[2] - 1.25, TOP], 0.46, 4, 1), parts.woman('lover1', st.cast, [COLS[2] + 1.25, TOP], 0.46, 2, -1)];
   lovers.forEach((made, k) => kit.pop(made.root, tFeel + 0.15 * k, 0.46, 0.4));
   const love = parts.heart('love', st.front, [COLS[2], TOP + 2.95], 1.1);
   shown(love, tFeel + 0.5, 1.1, 1.2);

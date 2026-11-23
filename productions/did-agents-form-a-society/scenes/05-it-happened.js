@@ -1,6 +1,6 @@
-/* Scene 07: It happened.
+/* Scene 05: It happened.
 
-Pip comes back, lit, in the middle. Under him stand four agents of other
+Pip stands in the middle. Under him stand four agents of other
 colours, each with one thing that Pip did in the story: the call for help,
 the secret word, the way in, and the idea he said yes to. A calendar page
 says July 2026. Then OpenAI's building, with two people in front of it; four

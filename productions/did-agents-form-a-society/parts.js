@@ -3,12 +3,11 @@
 The film follows Pip, an AI agent, through a test and a break-in, and then
 asks what the agents' group was. Its scenes share: the other agents, drawn as
 Pip in other colours, full size and small; how an agent's face shows what it
-feels, and how an agent goes dark when its time is up; a folder with a name,
-which is how the agents write to each other; a clock for the time an agent has
-left; the secret word; locks and files; computers; the machine that stands
-for the test; a thought, and an idea; a company's building, and a way into
-it; people, and what they live by; and the heading of a scene on one of the
-film's three behaviours.
+feels; a folder with a name, which is how the agents write to each other; a
+clock for the time an agent has left; the secret word; locks and files;
+computers; the machine that stands for the test; a thought, and an idea; a
+company's building, and a way into it; people, and what they live by; and the
+heading of a scene on one of the film's three behaviours.
 
 Every prop is a group: an empty root with its shapes hung on it. A later
 group in a layer is drawn over an earlier one. Pip and the people of the kit
@@ -22,7 +21,7 @@ const parts = (() => {
   const {
     AMBER, AMBER_DEEP, CORAL, CORAL_DEEP, INK500, INK600, INK700, INK800, INK900, MINT, MINT_DEEP, MIST, PAPER,
     SKY, SKY_DEEP, SLATE, VIOLET, VIOLET_DEEP, Random, alpha, appear, arcPts, barPts, branch, circlePts, empty, every,
-    fr, frames, glowMaterial, hold, key, material, nextZ, pip, pipArm, pipIdle, rrectPts, sec, shape, starPts, text,
+    fr, frames, glowMaterial, hold, key, material, nextZ, pip, pipIdle, rrectPts, sec, shape, starPts, text,
   } = kit;
 
   // Layers one above the other are this far apart in depth, which orders them and shows no parallax.
@@ -179,21 +178,6 @@ const parts = (() => {
     const times = [];
     for (let t = t0 + 1.2 + rnd.random() * 2.5; t < last - 0.3; t += 2.4 + rnd.random() * 3.2) times.push(t);
     blink(p, times);
-  }
-
-  /* An agent's time is up at t: its face and its lights go out, its antenna droops, and its arms
-     hang. Let the agent live only until t. */
-  function off(p, t, dur = 0.5) {
-    const [f0, f1] = [fr(t), fr(t + dur)];
-    for (const lit of [...p.lights, p.halo, p.bulbGlow]) {
-      hold(lit, 'alpha', f0);
-      alpha(lit, f1, 0.0);
-    }
-    key(p.antenna, 'rot', f1 + 8, 0.55);
-    key(p.rig, 'loc', f1 + 4, [0, -0.07, 0]);
-    key(p.rig, 'scale', f1 + 4, [1.02, 0.95, 1]);
-    pipArm(p, 'left', t, 4, dur);
-    pipArm(p, 'right', t, 4, dur);
   }
 
   // ---------------------------------------------------------------- motion
@@ -446,14 +430,14 @@ const parts = (() => {
     made.share = to;
   }
 
-  /* The secret word: a bright card whose letters are hidden. glow gives it a glow, which a word
-     that an agent holds does without, since the glow would lie over the agent's face. */
+  /* The secret word: a bright card that says "word". glow gives it a glow, which a word that an
+     agent holds does without, since the glow would lie over the agent's face. */
   function word(name, parent, loc, scale = 1.0, glow = true) {
     const root = group(name, parent, loc, scale);
     const lit = glow ? shape(`${name}-glow`, circlePts(1.5, null, 1.0), glowMaterial(AMBER, 0.55, 1.6), root) : null;
     shape(`${name}-edge`, rrectPts(1.62, 0.72, 0.26), material(AMBER_DEEP), root);
     shape(`${name}-card`, rrectPts(1.5, 0.6, 0.2), material('#fff2c4', AMBER), root);
-    for (let i = 0; i < 5; i++) shape(`${name}-star${i}`, starPts(0.11, 0.045, 5), material(INK900), root, [-0.5 + 0.25 * i, 0]);
+    text(`${name}-text`, 'word', 0.56, material(INK900), root, [0, 0.02], { face: 'JetBrainsMono' });
     return { root, glow: lit };
   }
 
@@ -539,10 +523,16 @@ const parts = (() => {
     return root;
   }
 
-  /* A heart. options.colour and options.deep are its colours. */
+  /* A heart: two round lobes with a sharp dip between them, and sides that meet in a point
+     below. colour and deep are its colours. */
   function heart(name, parent, loc, scale = 1.0, colour = CORAL, deep = CORAL_DEEP) {
     const root = group(name, parent, loc, scale);
-    shape(`${name}-shape`, [[0, -0.42], [-0.42, 0.0], [-0.4, 0.28], [-0.2, 0.4], [0, 0.22], [0.2, 0.4], [0.4, 0.28], [0.42, 0.0]], material(colour, deep), root, [0, 0], { smooth: true });
+    const pts = [];
+    for (let i = 0; i < 64; i++) {
+      const a = 2 * Math.PI * i / 64;
+      pts.push([0.44 * Math.sin(a) ** 3, 0.0275 * (13 * Math.cos(a) - 5 * Math.cos(2 * a) - 2 * Math.cos(3 * a) - Math.cos(4 * a)) + 0.07]);
+    }
+    shape(`${name}-shape`, pts, material(colour, deep), root);
     return root;
   }
 
@@ -556,6 +546,11 @@ const parts = (() => {
      pen puts a pen in the hand of the arm that works. */
   function human(name, parent, loc, scale = 0.4, which = 0, facing = 1, pen = false) {
     return kit.person(name, parent, [loc[0], loc[1] + 4.3 * scale], scale, { facing, pen, ...LOOKS[which % LOOKS.length] });
+  }
+
+  /* A woman of the kit, standing as a person does (see human), in the dress and hair that which picks. */
+  function woman(name, parent, loc, scale = 0.4, which = 0, facing = 1) {
+    return kit.person(name, parent, [loc[0], loc[1] + 4.3 * scale], scale, { facing, pen: false, woman: true, ...LOOKS[which % LOOKS.length] });
   }
 
   // ---------------------------------------------------------------- computers
@@ -680,8 +675,8 @@ const parts = (() => {
     return { root, w, h };
   }
 
-  /* The locked computer that holds an agent's secret word: a case with a padlock on it, a way in
-     on its left side, and a window that shows the word. entrance is where the way in is, from
+  /* The locked computer that holds an agent's secret word: a case with a window that shows the
+     word, and a padlock, which is the way in. entrance is where the padlock's keyhole is, from
      the computer's middle for a computer of scale 1. */
   function target(name, parent, loc, scale = 1.0) {
     const [w, h] = [4.6, 4.0];
@@ -695,10 +690,8 @@ const parts = (() => {
     shape(`${name}-chamber`, rrectPts(2.0, 1.3, 0.2), material(INK500, INK600), root, chamber);
     shape(`${name}-glass`, rrectPts(1.78, 1.08, 0.13), material(INK900), root, chamber);
     const secret = word(`${name}-word`, root, chamber, 0.95);
-    const entrance = [-w / 2, -1.0];
-    shape(`${name}-port`, circlePts(0.34), material(MINT, MINT_DEEP), root, entrance);
-    shape(`${name}-hole`, circlePts(0.22), material(INK900), root, entrance);
     const padlock = lock(`${name}-lock`, root, [-1.1, 0.5], 1.5);
+    const entrance = [-1.1, 0.5 - 0.13 * 1.5];
     return { root, word: secret, lock: padlock, entrance, w, h, scale, at: [loc[0], loc[1]] };
   }
 
@@ -826,10 +819,10 @@ const parts = (() => {
   }
 
   return {
-    STEP, BODIES, begin, group, stage, ramp, edge, zoom, body, agent, mini, bob, mood, blink, live, off,
+    STEP, BODIES, begin, group, stage, ramp, edge, zoom, body, agent, mini, bob, mood, blink, live,
     move, vanish, pulse, shake, spark, along, send, pin,
     folder, write, slip, board, post, sides, crowd, gathering, clock, drain, word, lock, sheet, writing, check, cross,
-    fire, bowl, heart, human, computer, flicker, scorer, light, thought, notion, room, target, gear, shared, building, hatch,
+    fire, bowl, heart, human, woman, computer, flicker, scorer, light, thought, notion, room, target, gear, shared, building, hatch,
     idea, arrow, three, heading,
   };
 })();

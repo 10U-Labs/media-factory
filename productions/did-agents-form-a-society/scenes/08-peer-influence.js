@@ -1,4 +1,4 @@
-/* Scene 10: Peer influence.
+/* Scene 08: Peer influence.
 
 A heading: the second of three discs is lit, beside the words "peer
 influence". Four people stand in a row. Three of them raise an arm, one

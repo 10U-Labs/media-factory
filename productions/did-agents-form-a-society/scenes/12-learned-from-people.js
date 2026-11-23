@@ -1,4 +1,4 @@
-/* Scene 14: Learned from people.
+/* Scene 12: Learned from people.
 
 Three people on the left, a wall of written pages in the middle, and an agent
 on the right. Page after page flies from the wall into the agent. Three larger

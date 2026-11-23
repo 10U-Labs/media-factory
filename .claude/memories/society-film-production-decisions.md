@@ -19,12 +19,21 @@ These production choices are settled for the society film, whose material is in 
 - Look: Claude's choice. The film uses the shared kit's flat shapes and its palette, so that Pip looks as it does in the other films; one agent is told from another by its body colour, and the researchers and the staff of Hugging Face are drawn as people.
 - Music: Claude's choice. The film has a tune of its own in the `[music]` table of its `production.toml`.
 
+The user's directions within the look:
+
+- The secret word is a card that says "word". It is not drawn as stars.
+- The way into the locked computer is the padlock drawn on it. No other opening is drawn on that computer, and what Pip sends at the computer goes to the padlock.
+- A heart has a heart's usual outline: two round lobes with a sharp dip between them, and sides that meet in a point below.
+- The two people who have feelings for each other are a man and a woman.
+- Pip's name is not written on screen in the opening scene. The narration gives it.
+
 Claude's choices within the look, which the user has not confirmed and may overrule:
 
+- A woman is drawn by `woman` in the film's `parts.js`, with hair to her shoulders and a dress to the knee. The film's other people stay as they are.
 - Pip is mint, as in the Gödel machines film, and the other agents are sky, violet, amber, coral, and mist. A crowd is drawn with small agents, and the few agents that act are drawn full size.
-- One thing has one picture through the film: a message is a folder with its name beside it; the secret word is an amber card of five stars; the time Pip has left is a clock that runs down; a lock and a fail are coral, and a pass is a mint tick; the test is a violet square machine with one eye; a thought is a cloud, and writing in it is drawn as bars; an idea is a lit bulb; the way into Hugging Face is a small dark opening with a mint rim, beside the building's door; a risk is a faint coral cross; an agent whose time is up has a dark screen and a drooped antenna.
+- One thing has one picture through the film: a message is a folder with its name beside it; the secret word is an amber card; the time Pip has left is a clock that runs down; a lock and a fail are coral, and a pass is a mint tick; the test is a violet square machine with one eye; a thought is a cloud, and writing in it is drawn as bars; an idea is a lit bulb; the way into Hugging Face is a small dark opening with a mint rim, beside the building's door; a risk is a faint coral cross.
 - A folder's name on screen is bars, with at most a start that can be read, and that start is one the real agents used: HELP, ANSWER, INFO, or ASK. No other message text is made up, since what the agents wrote counts as the science, per [Every production tells a story](every-production-tells-a-story.md).
-- The other words on screen are Pip's name, the signs on OpenAI's and Hugging Face's buildings, the month of the incident, two counts that the narration gives, and the names of the three behaviours, per [Show people, not panels](show-people-not-panels.md).
+- The other words on screen are the word on the secret word's card, the signs on OpenAI's and Hugging Face's buildings, the month of the incident, two counts that the narration gives, and the names of the three behaviours, per [Show people, not panels](show-people-not-panels.md).
 - The three behaviours are counted with three discs. Each behaviour's scene keeps a heading on screen, with its disc lit beside its name, and shows what the behaviour means with people before it shows what the agents did. The possibility scene shows the three behaviours as three small pictures with their names under them, which stay on screen to the scene's end.
 - Pip is in the story's scenes and in the scene that says he is made up. After that, no agent is drawn in mint.
 

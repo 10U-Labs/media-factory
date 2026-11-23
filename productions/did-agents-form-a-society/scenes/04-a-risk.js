@@ -5,7 +5,7 @@ is low. Three ideas light up on the board. A thought over the board shows
 what trying one can cost: an agent takes an idea, and fails. One of the
 ideas comes down to Pip all the same, and waits beside him. Pip looks at his
 clock, and at the idea. Then he raises his arm and takes it, and a tick
-stays over his head.
+stays over his head. The story ends here: the picture holds, and goes dark.
 */
 'use strict';
 
@@ -108,6 +108,7 @@ function build(T) {
   kit.pipArm(pip, 'right', tYes + 0.7, 80, 0.3);
   parts.send(ideas[2], [OFFER, [PLACE[0] + 0.95, PLACE[1] - 0.1]], tYes + 0.75, tYes + 1.2, { shown: true, size: 0.9, to: 0.8, stay: true });
   parts.live(pip, 21);
+  kit.veil(end - 1.4, 1.1);
 
   // ------------------------------------------------------------ camera
   kit.camera(parts.ramp([

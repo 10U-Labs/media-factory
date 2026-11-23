@@ -1,4 +1,4 @@
-/* Scene 11: Altruism.
+/* Scene 09: Altruism.
 
 A heading: the third of three discs is lit, beside the word "altruism". Two
 people face each other, and one hands the other a bowl of food. They make

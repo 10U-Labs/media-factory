@@ -1,10 +1,10 @@
-/* Scene 15: A case to study.
+/* Scene 13: A case to study.
 
 A question mark, and then a wall of small folders that fills the frame, with
 a count on it and the agents' written thinking over it. Three researchers
 stand in front of the wall. On the left a card opens: people, an arrow, and
 agents. On the right another: four agents by themselves, and lines growing
-between them.
+between them. The picture holds, and goes dark.
 */
 'use strict';
 
@@ -94,7 +94,8 @@ function build(T) {
   });
   const which = [kit.ring('which0', st.front, COPIED, 2.3, kit.PAPER, 0.06), kit.ring('which1', st.front, OWN, 2.3, kit.PAPER, 0.06)];
   kit.flash(which[0], tCopied + 1.6, 0.9, 0.15);
-  kit.flash(which[1], end - 1.8, 0.9, 0.15);
+  kit.flash(which[1], T.end(2) - 1.1, 0.9, 0.15);
+  kit.veil(end - 2.3, 1.8);
 
   // ------------------------------------------------------------ camera
   kit.camera(parts.ramp([[0, [0, 0.6, 18.5]], [tCase + 1.6, [0, -0.1, 20.5]], [tCopied - 0.3, [0, -0.3, 21]], [tCopied + 1.0, [-0.5, -0.45, 21]],

@@ -1,12 +1,11 @@
-/* Scene 09: A shared belief.
+/* Scene 07: A shared belief.
 
 A heading: the first of three discs is lit, beside the words "shared
 belief". Four people stand in a row, and the same thought pops up over each
 of them. They make way for fifteen agents and, on the right, the machine
 that stands for the test. Its eye is shut, and files of what agents did
 slide past under it, unread. A small thought of the machine, with its eye
-open, pops up over every agent. Then a cross goes over every one of those
-thoughts at the same moment.
+open, pops up over every agent.
 */
 'use strict';
 
@@ -22,7 +21,6 @@ function build(T) {
   const tNo = T.start(1);
   const tSaw = T.at(1, 0.2);
   const tBut = T.at(1, 0.6);
-  const tWrong = T.at(2, 0.3);
 
   kit.backdrop(5);
   kit.motes(20, 17);
@@ -68,15 +66,12 @@ function build(T) {
   }
   cues.push({ t: tSaw, type: 'swoosh', dur: 2.4, gain: 0.6 });
 
-  // ------------------------------------------------------------ but all of them came to believe it did, and they were wrong together
+  // ------------------------------------------------------------ but all of them came to believe it did
   agents.forEach((at, i) => {
     const small = parts.notion(`notion${i}`, st.front, [at[0] + 0.3, at[1] + 1.05], 0.9);
     kit.pop(small, tBut + 0.04 * i, 0.9, 0.3);
     if (i % 3 === 0) cues.push({ t: tBut + 0.04 * i, type: 'blip', pitch: 0.7 + 0.04 * i, gain: 0.4 });
-    const wrong = parts.cross(`wrong${i}`, st.front, [at[0] + 0.41, at[1] + 1.16], 1.0);
-    kit.pop(wrong, tWrong, 1.0, 0.25);
   });
-  cues.push({ t: tWrong, type: 'tick', pitch: 0.4, gain: 1.6 }, { t: tWrong + 0.05, type: 'whoosh', pitch: 0.6, gain: 0.6 });
 
   kit.camera(path, 1.0);
   return cues;

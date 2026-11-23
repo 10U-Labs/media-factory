@@ -1,20 +1,19 @@
-/* Scene 13: A possibility.
+/* Scene 11: A possibility.
 
 A question mark makes way for three small pictures in a row, each with its
 name under it: three agents under one thought, "shared belief"; an agent
 that follows two others across a line, "peer influence"; and an agent that
 takes an idea, a faint cross over it, while two others get what it learns,
-"altruism". A bracket
-joins the three to a place above them. Two people who share a bowl by a fire
-appear there, and go. A line of people who stretch back into the distance
-appears there, and goes. Two people with a heart between them appear there,
-and go. Then a bracket joins the three to two pictures below them: an agent
-with a light over it, and two agents with a line between them that a spark
-runs along. Last, the three pictures rise to the top, and under them stand
-a circle of people and a circle of agents. In both, a light comes on over
-every member, lines grow between the members, and sparks run along the
-lines. A line joins the three pictures to the people, and then to the
-agents.
+"altruism". A bracket joins the three to a place above them. Two people who
+share a bowl by a fire appear there, and go. A line of people who stretch
+back into the distance appears there, and goes. A man and a woman with a
+heart between them appear there, and go. Then a bracket joins the three to
+two pictures below them: an agent with a light over it, and two agents with a
+line between them that a spark runs along. Last, the three pictures rise to
+the top, and under them stand a circle of people and a circle of agents. In
+both, a light comes on over every member, lines grow between the members, and
+sparks run along the lines. A line joins the three pictures to the people,
+and then to the agents.
 */
 'use strict';
 
@@ -115,7 +114,7 @@ function build(T) {
 
   const feel = parts.group('feelings', st.front, SLOT);
   parts.human('feel0', feel, [-0.85, 0], 0.27, 4, 1);
-  parts.human('feel1', feel, [0.85, 0], 0.27, 2, -1);
+  parts.woman('feel1', feel, [0.85, 0], 0.27, 2, -1);
   parts.heart('feel-heart', feel, [0, 1.05], 0.5);
 
   const not = kit.ring('not', st.front, [SLOT[0], SLOT[1] + 0.8], 1.3, kit.CORAL, 0.07);

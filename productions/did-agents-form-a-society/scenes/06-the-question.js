@@ -1,4 +1,4 @@
-/* Scene 08: The question.
+/* Scene 06: The question.
 
 A cluster of agents, and then a question mark over it. Four suns for its
 four days. Three discs light up, one for each of three things. Then the
