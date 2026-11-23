@@ -583,25 +583,45 @@ const kit = (() => {
      The figure is widest at the shoulders and narrows to the hips, and its legs are about as
      long as its jacket. The origin is at the shoulders, and the feet are 4.3 below it. facing 1
      looks right, -1 looks left. The working arm hangs at angle 0 and rotates about the shoulder
-     toward where the figure faces. It holds a pen, which options.pen: false leaves out. */
+     toward where the figure faces. It holds a pen, which options.pen: false leaves out.
+
+     options.woman: true draws a woman. Her hair falls to her shoulders, and where a man has a
+     jacket and trousers she has a dress, which ends at the knee and is narrower there than at
+     the hips. */
   function person(name, parent, loc = [0, 0], scale = 1.0, options = {}) {
-    const { coat = '#5566c2', coatDeep = INK500, hair = '#3b2a26', facing = 1, pen = true } = options;
+    const { coat = '#5566c2', coatDeep = INK500, hair = '#3b2a26', facing = 1, pen = true, woman = false } = options;
     const root = empty(name, parent, [loc[0], loc[1], nextZ(parent)], scale);
     const body = empty(`${name}-body`, root, [0, 0, 0]);
-    shape(`${name}-legs`, [[-0.5, -2.1], [0.5, -2.1], [0.46, -4.3], [0.1, -4.3], [0, -2.75], [-0.1, -4.3], [-0.46, -4.3]], material(INK900, INK800), body);
+    if (woman) {
+      for (const side of [-1, 1]) {
+        shape(`${name}-leg${side}`, [[side * 0.12, -3.0], [side * 0.44, -3.0], [side * 0.38, -4.3], [side * 0.16, -4.3]], material(SKIN, SKIN_SHADE), body);
+      }
+    } else {
+      shape(`${name}-legs`, [[-0.5, -2.1], [0.5, -2.1], [0.46, -4.3], [0.1, -4.3], [0, -2.75], [-0.1, -4.3], [-0.46, -4.3]], material(INK900, INK800), body);
+    }
     for (const side of [-1, 1]) {
       shape(`${name}-shoe${side}`, rrectPts(0.5, 0.17, 0.08), material(INK900), body, [side * 0.28 + 0.07 * facing, -4.3]);
     }
     const far = empty(`${name}-far-shoulder`, body, [-0.7 * facing, -0.28, 0], 1.0, -0.06 * facing);     // behind the jacket
     shape(`${name}-far-arm`, capsulePts(1.4, 0.28), material(coat, coatDeep), far);
     shape(`${name}-far-hand`, circlePts(0.14), material(SKIN, SKIN_SHADE), far, [0, -1.45]);
-    shape(`${name}-coat`, [[-0.82, -0.22], [-0.5, 0.08], [0, 0.13], [0.5, 0.08], [0.82, -0.22], [0.74, -1.3], [0.62, -2.35], [-0.62, -2.35], [-0.74, -1.3]],
-      material(coat, coatDeep), body, [0, 0], { smooth: true });
+    if (woman) {
+      // Her hair, behind her neck and her shoulders: round over the head, and straight down from it.
+      const fall = [];
+      for (let i = 0; i <= 14; i++) fall.push([0.61 * Math.cos(Math.PI * i / 14), 0.76 + 0.61 * Math.sin(Math.PI * i / 14)]);
+      fall.push([-0.61, 0.0], [-0.52, -0.2], [0.52, -0.2], [0.61, 0.0]);
+      shape(`${name}-long-hair`, fall, material(hair), body, [0.05 * facing, 0]);
+    }
+    const jacket = [[-0.82, -0.22], [-0.5, 0.08], [0, 0.13], [0.5, 0.08], [0.82, -0.22], [0.74, -1.3], [0.62, -2.35], [-0.62, -2.35], [-0.74, -1.3]];
+    // Two points at each end of the hem keep the rounding there short, so that the dress does not swell toward its hem.
+    const dress = [[-0.82, -0.22], [-0.5, 0.08], [0, 0.13], [0.5, 0.08], [0.82, -0.22], [0.7, -1.3], [0.62, -2.3], [0.57, -3.05], [0.48, -3.2],
+      [-0.48, -3.2], [-0.57, -3.05], [-0.62, -2.3], [-0.7, -1.3]];
+    shape(`${name}-coat`, woman ? dress : jacket, material(coat, coatDeep), body, [0, 0], { smooth: true });
     shape(`${name}-collar`, [[-0.22, 0.08], [0.22, 0.08], [0, -0.5]], material(PAPER), body);
     shape(`${name}-neck`, rrectPts(0.3, 0.36, 0.12), material(SKIN_SHADE), body, [0, 0.17]);
     const head = empty(`${name}-head`, body, [0.05 * facing, 0.74, nextZ(body)], 1.15);
     shape(`${name}-face`, circlePts(0.44), material(SKIN, SKIN_SHADE), head);
-    shape(`${name}-ear`, circlePts(0.08), material(SKIN_SHADE), head, [-0.4 * facing, -0.02]);
+    if (!woman) shape(`${name}-ear`, circlePts(0.08), material(SKIN_SHADE), head, [-0.4 * facing, -0.02]);
     shape(`${name}-hair`, [[-0.47 * facing, 0.02], [-0.44 * facing, 0.32], [-0.12 * facing, 0.52], [0.28 * facing, 0.48], [0.46 * facing, 0.2], [0.3 * facing, 0.26], [-0.2 * facing, 0.22]],
       material(hair), head, [0, 0], { smooth: true });
     for (const side of [-1, 1]) {
